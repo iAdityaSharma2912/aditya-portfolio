@@ -1,26 +1,59 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@theme {
+  /* Colors */
+  --color-background: #0A0A0B;
+  --color-foreground: #F4F4F5;
+  --color-muted: #27272A;
+  --color-accent: #3F3F46;
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* Typography System */
+  --font-display: var(--font-space); 
+  --font-sans: var(--font-manrope);
+  --font-mono: var(--font-mono);
+  /* Added this just in case, though we aren't using it yet */
+  --font-serif: serif; 
 }
+/* Custom Scrollbar */
+/* globals.css */
+@layer utilities {
+  /* Keep your existing scrollbar stuff here... */
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  /* Keep marquee animation here... */
+  .animate-marquee { animation: marquee 25s linear infinite;
+  will-change: transform; }
+  .animate-marquee:hover { animation-play-state: paused; }
+  @keyframes marquee { 0% { transform: translateX(0%); } 100% { transform: translateX(-50%); } }
+
+  /* =========================================
+     NEW: SHOOTING STAR / METEOR ANIMATION
+  ========================================= */
+  .animate-meteor {
+    animation: meteor 5s linear infinite;
+  }
+
+  @keyframes meteor {
+    0% {
+      transform: rotate(215deg) translateX(0);
+      opacity: 0;
+    }
+    10% {
+      opacity: 1; /* Fade in quickly */
+    }
+    70% {
+      opacity: 1;
+    }
+    100% {
+      transform: rotate(215deg) translateX(-1500px); /* Shoot across screen */
+      opacity: 0; /* Fade out at the end */
+    }
   }
 }
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* This forces any element using font-display to use Space Grotesk 
+   and fall back to the boldest weight available (700) */
+.font-display {
+  font-family: var(--font-space), sans-serif !important;
+  font-weight: 700; 
 }
