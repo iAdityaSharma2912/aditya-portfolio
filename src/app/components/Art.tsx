@@ -82,9 +82,20 @@ function PenNib({ className }: { className?: string }) {
 }
 
 // Decorative SVG pencil lines (sketch marks)
-function SketchLines({ className }: { className?: string }) {
+function SketchLines({
+  className,
+  style,
+}: {
+  className?: string
+  style?: React.CSSProperties
+}) {
   return (
-    <svg className={className} viewBox="0 0 200 120" fill="none">
+    <svg
+      className={className}
+      style={style}
+      viewBox="0 0 200 120"
+      fill="none"
+    >
       <line x1="0" y1="10" x2="60" y2="0" stroke="#C9A84C" strokeWidth="0.5" opacity="0.25"/>
       <line x1="0" y1="20" x2="50" y2="12" stroke="#C9A84C" strokeWidth="0.3" opacity="0.15"/>
       <line x1="0" y1="30" x2="70" y2="18" stroke="#C9A84C" strokeWidth="0.4" opacity="0.2"/>
