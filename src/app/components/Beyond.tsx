@@ -9,7 +9,7 @@ const stories = [
     excerpt: "If you start seeing love around you, you end up being loved.",
     date: "2025",
     link: "/assests/write/the 7 of you (the first bloom).pdf",
-    tag: "Short Story",
+    tag: "Novel"
   },
   {
     title: "Do Saheliyaan",
