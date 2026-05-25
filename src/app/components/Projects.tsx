@@ -97,10 +97,9 @@ export default function Projects() {
 
         {/* The moving track */}
         <motion.div
-          style={{ x }}
-          className="flex gap-8 px-6 md:px-12"
-          style={{ x, width: `${CARD_COUNT * 100}vw` }}
-        >
+  style={{ x, width: `${CARD_COUNT * 100}vw` }}
+  className="flex gap-8 px-6 md:px-12"
+>
           {projects.map((project, index) => (
             <div
               key={index}
