@@ -209,7 +209,7 @@ export default function Hero() {
             <motion.div
               style={{ opacity: aboutOpacity, y: aboutY }}
               className="absolute right-[10%] top-[38%] w-[38vw] max-w-xl z-30 flex flex-col gap-5 p-8"
-              style2={{}}
+              
             >
               {/* Decorative corner */}
               <svg className="absolute -top-px -left-px w-8 h-8" viewBox="0 0 32 32" fill="none">
@@ -279,7 +279,7 @@ export default function Hero() {
             <motion.div
               style={{ opacity: aboutOpacity, y: aboutY }}
               className="absolute left-1/2 -translate-x-1/2 top-[32%] w-[88vw] z-10 flex flex-col gap-4 p-6"
-              style2={{}}
+              
             >
               <svg className="absolute -top-px -left-px w-6 h-6" viewBox="0 0 32 32" fill="none">
                 <path d="M1 31 L1 1 L31 1" stroke="#C9A84C" strokeWidth="1" opacity="0.5"/>
