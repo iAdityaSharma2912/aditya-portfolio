@@ -1,42 +1,47 @@
 import type { Metadata } from "next";
-// 1. Import the fonts from Google
-import { Space_Grotesk, Manrope, Fira_Code } from "next/font/google";
+import { Bebas_Neue, DM_Sans, Fira_Code, Cormorant_Garamond } from "next/font/google";
 import "./globals.css";
 
-// 2. Configure each font and assign it to the CSS variables we used in globals.css
-const spaceGrotesk = Space_Grotesk({
+const bebasNeue = Bebas_Neue({
   subsets: ["latin"],
-  variable: "--font-space", // Matches --font-display in globals.css
-  display: 'swap',
-  weight: ['400','700'],
+  variable: "--font-bebas",
+  weight: "400",
+  display: "swap",
 });
 
-const manrope = Manrope({
+const dmSans = DM_Sans({
   subsets: ["latin"],
-  variable: "--font-manrope", // Matches --font-sans in globals.css
-  display: 'swap',
+  variable: "--font-dm",
+  display: "swap",
 });
 
 const firaCode = Fira_Code({
   subsets: ["latin"],
-  variable: "--font-mono", // Matches --font-mono in globals.css
-  display: 'swap',
+  variable: "--font-mono",
+  display: "swap",
+});
+
+const cormorant = Cormorant_Garamond({
+  subsets: ["latin"],
+  variable: "--font-cormorant",
+  weight: ["300", "400", "500", "600"],
+  style: ["normal", "italic"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "Aditya Sharma | AI Developer",
-  description: "Portfolio of Aditya Sharma, Computer Science Engineer and AI-Focused Developer.",
+  title: "Aditya Sharma — Developer & Artist",
+  description: "Portfolio of Aditya Sharma — Full-Stack Developer, AI Engineer, and Artist based in Delhi, India.",
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className="scroll-smooth">
-      {/* 3. Inject the font variables into the body tag */}
-      <body className={`${spaceGrotesk.variable} ${manrope.variable} ${firaCode.variable} antialiased`}>
+      <body
+        className={`${bebasNeue.variable} ${dmSans.variable} ${firaCode.variable} ${cormorant.variable} antialiased grain`}
+      >
         {children}
       </body>
     </html>

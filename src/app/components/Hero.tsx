@@ -1,253 +1,304 @@
 "use client";
 
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
+
+const NAV_LINKS = [
+  { label: "Projects", id: "projects" },
+  { label: "Experience", id: "experience" },
+  { label: "Art", id: "art" },
+  { label: "Beyond", id: "writing" },
+  { label: "Contact", id: "contact" },
+];
 
 export default function Hero() {
   const containerRef = useRef(null);
-  
-  // State to control the mobile menu
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [time, setTime] = useState("");
 
-  // Smooth scroll function
+  useEffect(() => {
+    const update = () => {
+      setTime(new Date().toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit", timeZone: "Asia/Kolkata" }));
+    };
+    update();
+    const t = setInterval(update, 1000);
+    return () => clearInterval(t);
+  }, []);
+
   const scrollTo = (id: string) => {
     setIsMenuOpen(false);
-    if (id === 'home') {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      return;
-    }
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
+    if (id === "home") { window.scrollTo({ top: 0, behavior: "smooth" }); return; }
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
   };
 
-  // Track the scroll progress of the 250vh section
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end start"],
   });
 
-  // ==========================================
-  // SHARED ANIMATIONS
-  // ==========================================
-  const textOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0.05]);
-  const textY = useTransform(scrollYProgress, [0, 0.5], ["0vh", "-10vh"]);
-  const aboutOpacity = useTransform(scrollYProgress, [0.3, 0.6], [0, 1]);
+  const textOpacity   = useTransform(scrollYProgress, [0, 0.45], [1, 0]);
+  const textY         = useTransform(scrollYProgress, [0, 0.45], ["0vh", "-12vh"]);
+  const textScale     = useTransform(scrollYProgress, [0, 0.45], [1, 0.92]);
+  const aboutOpacity  = useTransform(scrollYProgress, [0.3, 0.6], [0, 1]);
+  const aboutY        = useTransform(scrollYProgress, [0.3, 0.6], ["14vh", "0vh"]);
+  const imgX          = useTransform(scrollYProgress, [0, 0.5], ["22vw", "-22vw"]);
+  const imgY          = useTransform(scrollYProgress, [0, 0.5], ["0vh", "8vh"]);
+  const imgScale      = useTransform(scrollYProgress, [0, 0.5], [1.15, 0.88]);
 
-  // ==========================================
-  // DESKTOP ANIMATIONS
-  // ==========================================
-  const desktopImageX = useTransform(scrollYProgress, [0, 0.5], ["25vw", "-25vw"]);
-  const desktopImageY = useTransform(scrollYProgress, [0, 0.5], ["0vh", "10vh"]);
-  const desktopImageScale = useTransform(scrollYProgress, [0, 0.5], [1.2, 0.9]);
-  const desktopAboutY = useTransform(scrollYProgress, [0.3, 0.6], ["10vh", "0vh"]);
-
-  // ==========================================
-  // MOBILE ANIMATIONS
-  // ==========================================
-  const mobileAboutY = useTransform(scrollYProgress, [0.3, 0.6], ["10vh", "0vh"]);
+  const containerVariants = {
+    hidden: {},
+    visible: { transition: { staggerChildren: 0.12 } },
+  };
+  const lineVariants = {
+    hidden:  { y: "110%", opacity: 0 },
+    visible: { y: "0%",   opacity: 1, transition: { duration: 0.9, ease: [0.22, 1, 0.36, 1] } },
+  };
 
   return (
     <>
-      {/* =========================================================
-          FULLSCREEN MOBILE MENU (Overlay)
-      ========================================================= */}
+      {/* ── FULLSCREEN MOBILE MENU ── */}
       <AnimatePresence>
         {isMenuOpen && (
-          <motion.div 
-            initial={{ opacity: 0, y: "-100%" }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: "-100%" }}
-            transition={{ duration: 0.5, ease: [0.76, 0, 0.24, 1] }}
-            className="fixed inset-0 z-[100] bg-background flex flex-col items-center justify-center border-b border-muted"
+          <motion.div
+            initial={{ opacity: 0, clipPath: "inset(0 0 100% 0)" }}
+            animate={{ opacity: 1, clipPath: "inset(0 0 0% 0)" }}
+            exit={{ opacity: 0, clipPath: "inset(0 0 100% 0)" }}
+            transition={{ duration: 0.55, ease: [0.76, 0, 0.24, 1] }}
+            className="fixed inset-0 z-[100] flex flex-col items-center justify-center"
+            style={{ background: "#080808" }}
           >
-            {/* Close Button */}
-            <button 
+            <button
               onClick={() => setIsMenuOpen(false)}
-              className="absolute top-6 right-6 p-4 text-gray-400 hover:text-foreground transition-colors"
-              aria-label="Close menu"
+              className="absolute top-6 right-6 p-4 text-gray-500 hover:text-foreground transition-colors"
             >
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
-            
-            {/* Menu Links */}
-            <div className="flex flex-col gap-8 text-center font-display text-4xl uppercase font-black tracking-tighter">
-              <button onClick={() => scrollTo('home')} className="hover:text-gray-400 transition-colors">Home</button>
-              <button onClick={() => scrollTo('projects')} className="hover:text-gray-400 transition-colors">Projects</button>
-              <button onClick={() => scrollTo('experience')} className="hover:text-gray-400 transition-colors">Experience</button>
-              <button onClick={() => scrollTo('art')} className="hover:text-gray-400 transition-colors">Art</button>
-              <button onClick={() => scrollTo('writing')} className="hover:text-gray-400 transition-colors">Beyond</button>
-              <button onClick={() => scrollTo('contact')} className="hover:text-gray-400 transition-colors">Contact</button>
-              
-              {/* Resume Link */}
-              <a 
-                href="/Aditya%20Sharma%20Resume.pdf" 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className="text-gray-500 hover:text-white transition-colors text-2xl mt-4 border-t border-muted pt-8"
-              >
-                Resume ↗
-              </a>
-            </div>
+
+            <nav className="flex flex-col gap-6 text-center">
+              {[{ label: "Home", id: "home" }, ...NAV_LINKS].map((link, i) => (
+                <motion.button
+                  key={link.id}
+                  initial={{ opacity: 0, x: -30 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.07, ease: [0.22, 1, 0.36, 1], duration: 0.5 }}
+                  onClick={() => scrollTo(link.id)}
+                  className="font-display text-5xl uppercase tracking-wider text-foreground hover:text-gold-dim transition-colors"
+                  style={{ color: "var(--color-foreground)" }}
+                >
+                  {link.label}
+                </motion.button>
+              ))}
+            </nav>
+
+            <motion.a
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.5 }}
+              href="/Aditya%20Sharma%20Resume.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-12 font-mono text-xs uppercase tracking-widest border px-8 py-3 transition-colors"
+              style={{ borderColor: "#C9A84C44", color: "#C9A84C" }}
+            >
+              Resume ↗
+            </motion.a>
           </motion.div>
         )}
       </AnimatePresence>
 
-      {/* Main Hero Section */}
-      <section ref={containerRef} id="home" className="relative h-[250vh] text-foreground font-sans bg-transparent">
-        
-        {/* Sticky container locks to screen while scrolling */}
+      {/* ── MAIN HERO ── */}
+      <section ref={containerRef} id="home" className="relative h-[260vh] text-foreground font-sans">
         <div className="sticky top-0 h-screen w-full flex justify-center items-center overflow-hidden px-6 md:px-12">
 
-          {/* =========================================================
-              DESKTOP LAYOUT (Hidden on mobile, visible on md+)
-          ========================================================= */}
+          {/* ── DESKTOP ── */}
           <div className="hidden md:block w-full h-full relative">
-            
-            {/* Desktop Navbar */}
-            <motion.div 
+
+            {/* Navbar */}
+            <motion.div
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
               className="absolute top-0 left-0 w-full flex justify-between items-center py-8 z-50"
             >
-              {/* Left Side: ACTIVE Navigation Links */}
-              <div className="flex gap-8 font-mono text-xs uppercase tracking-widest text-gray-400">
-                <button onClick={() => scrollTo('home')} className="hover:text-white transition-colors duration-300">Home</button>
-                <button onClick={() => scrollTo('projects')} className="hover:text-white transition-colors duration-300">Projects</button>
-                <button onClick={() => scrollTo('experience')} className="hover:text-white transition-colors duration-300">Experience</button>
-                <button onClick={() => scrollTo('art')} className="hover:text-white transition-colors duration-300">Art</button>
-                <button onClick={() => scrollTo('writing')} className="hover:text-white transition-colors duration-300">Beyond</button>
-                <button onClick={() => scrollTo('contact')} className="hover:text-white transition-colors duration-300">Contact</button>
+              <div className="flex gap-8 font-mono text-xs uppercase tracking-widest" style={{ color: "#5A5550" }}>
+                {NAV_LINKS.map((link) => (
+                  <button
+                    key={link.id}
+                    onClick={() => scrollTo(link.id)}
+                    className="underline-draw hover:text-foreground transition-colors duration-300"
+                  >
+                    {link.label}
+                  </button>
+                ))}
               </div>
-
-              {/* Right Side: Avatar & Name */}
-              <div className="flex items-center gap-4">
-                <span className="font-mono text-xs uppercase tracking-widest text-gray-300">Addy</span>
-                <img 
-                  src="/assests/avatar.png" 
-                  alt="Aditya Sharma" 
-                  className="w-10 h-10 rounded-full object-cover border border-muted/50 shadow-md"
-                />
+              <div className="flex items-center gap-6">
+                <span className="font-mono text-xs tracking-widest" style={{ color: "#C9A84C66" }}>
+                  IST {time}
+                </span>
+                <div className="flex items-center gap-3">
+                  <span className="font-mono text-xs uppercase tracking-widest" style={{ color: "#5A5550" }}>Addy</span>
+                  <img src="/assests/avatar.png" alt="Aditya Sharma" className="w-9 h-9 rounded-full object-cover" style={{ border: "1px solid #C9A84C33" }} />
+                </div>
               </div>
             </motion.div>
 
-            {/* Background Text (Desktop) */}
+            {/* STATUS badge */}
             <motion.div
-              style={{ opacity: textOpacity, y: textY }}
-              className="absolute top-1/2 left-[35%] -translate-x-1/2 -translate-y-1/2 flex flex-col z-0 pointer-events-none"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 1 }}
+              className="absolute bottom-10 left-0 flex items-center gap-3 font-mono text-xs uppercase tracking-widest z-20"
+              style={{ color: "#5A5550" }}
             >
-              {/* Changed font-display to font-sans (optional), and kept text-foreground (white) */}
-              <div className="font-sans text-[14vw] font-black uppercase leading-[0.85] tracking-tighter text-left text-foreground">
-                Hi, I&apos;M
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              Available for work · Delhi, India
+            </motion.div>
+
+            {/* Big name */}
+            <motion.div
+              style={{ opacity: textOpacity, y: textY, scale: textScale }}
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+              className="absolute top-1/2 left-[33%] -translate-x-1/2 -translate-y-1/2 flex flex-col z-0 pointer-events-none select-none"
+            >
+              <div className="overflow-hidden">
+                <motion.div
+                  variants={lineVariants}
+                  className="font-display text-[13.5vw] leading-[0.88] tracking-wider uppercase text-foreground"
+                >
+                  Hi,
+                </motion.div>
               </div>
-              {/* Added a beautiful linear gradient to your name */}
-              <div className="font-sans text-[14vw] font-black uppercase leading-[0.85] tracking-tighter text-left pl-[10%] bg-linear-to-r from-cyan-400 to-indigo-500 bg-clip-text text-transparent">
-                ADDY.
+              <div className="overflow-hidden">
+                <motion.div
+                  variants={lineVariants}
+                  className="font-display text-[13.5vw] leading-[0.88] tracking-wider uppercase pl-[8%]"
+                  style={{
+                    WebkitTextStroke: "1px rgba(201,168,76,0.4)",
+                    color: "transparent",
+                  }}
+                >
+                  I&apos;M
+                </motion.div>
+              </div>
+              <div className="overflow-hidden">
+                <motion.div
+                  variants={lineVariants}
+                  className="font-display text-[13.5vw] leading-[0.88] tracking-wider uppercase text-gold-shimmer"
+                >
+                  ADDY.
+                </motion.div>
               </div>
             </motion.div>
 
-            {/* Avatar Image */}
+            {/* Avatar */}
             <motion.img
-              src="/assests/avatar.png" 
+              src="/assests/avatar.png"
               alt="Aditya Sharma"
-              style={{ x: desktopImageX, y: desktopImageY, scale: desktopImageScale }}
-              className="absolute inset-0 m-auto z-20 w-72 h-72 "
+              style={{ x: imgX, y: imgY, scale: imgScale }}
+              className="absolute inset-0 m-auto z-20 w-68 h-68 rounded-sm"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 1.2, delay: 0.6 }}
             />
 
-            {/* About Me Bio */}
+            {/* About panel */}
             <motion.div
-              style={{ opacity: aboutOpacity, y: desktopAboutY }}
-              className="absolute right-[15%] top-[40%] w-[40vw] max-w-2xl z-10 flex flex-col gap-6 backdrop-blur-sm p-8 border-l-4 border-foreground rounded-r-lg bg-background/50"
+              style={{ opacity: aboutOpacity, y: aboutY }}
+              className="absolute right-[10%] top-[38%] w-[38vw] max-w-xl z-30 flex flex-col gap-5 p-8"
+              style2={{}}
             >
-              <h2 className="text-5xl font-display font-black uppercase tracking-tight">About Me</h2>
-              <p className="text-gray-400 text-xl leading-relaxed font-sans">
-                I’m <strong className="text-gray-200">Aditya Sharma</strong>, an AI-focused developer and Computer Science Engineer building intelligent systems that transform raw data into actionable intelligence.
+              {/* Decorative corner */}
+              <svg className="absolute -top-px -left-px w-8 h-8" viewBox="0 0 32 32" fill="none">
+                <path d="M1 31 L1 1 L31 1" stroke="#C9A84C" strokeWidth="1" opacity="0.5"/>
+              </svg>
+              <svg className="absolute -bottom-px -right-px w-8 h-8" viewBox="0 0 32 32" fill="none">
+                <path d="M1 1 L31 1 L31 31" stroke="#C9A84C" strokeWidth="1" opacity="0.5" transform="rotate(180,16,16)"/>
+              </svg>
+
+              <div style={{ borderLeft: "2px solid #C9A84C66", paddingLeft: "1rem" }}>
+                <h2 className="font-display text-4xl uppercase tracking-wider mb-1" style={{ color: "#C9A84C" }}>
+                  About Me
+                </h2>
+                <p className="font-mono text-xs uppercase tracking-widest" style={{ color: "#5A5550" }}>
+                  B.Tech CSE · 2026 · Delhi
+                </p>
+              </div>
+
+              <p className="font-sans text-base leading-relaxed" style={{ color: "#9A9590" }}>
+                I&apos;m <strong style={{ color: "#F0EDE6" }}>Aditya Sharma</strong> — a full-stack developer and AI engineer building production-grade tools people actually use.
                 <br /><br />
-                From FlashSnap (a live AI study platform) to SheetSnap and DevVault, I ship full-stack products end-to-end — from backend pipelines and databases to deployed frontends with real users.
+                From FlashSnap (live AI study platform) to SheetSnap and DevVault, I ship end-to-end — backend pipelines, databases, deployed frontends. When I&apos;m not writing code, I&apos;m filling sketchbooks.
               </p>
-              
-              {/* Resume Button for Desktop */}
-              <a 
-                href="/Aditya%20Sharma%20Resume.pdf" 
-                target="_blank" 
+
+              <a
+                href="/Aditya%20Sharma%20Resume.pdf"
+                target="_blank"
                 rel="noopener noreferrer"
-                className="mt-2 w-fit px-6 py-3 border border-gray-500 text-gray-300 font-mono text-xs uppercase tracking-widest hover:bg-foreground hover:text-background transition-colors flex items-center gap-3"
+                className="mt-1 w-fit px-6 py-3 font-mono text-xs uppercase tracking-widest flex items-center gap-3 transition-all duration-300 hover:gap-5"
+                style={{ border: "1px solid #C9A84C44", color: "#C9A84C" }}
+                onMouseEnter={e => { (e.currentTarget as HTMLElement).style.background = "#C9A84C11"; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLElement).style.background = "transparent"; }}
               >
                 View Resume
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg>
               </a>
-
             </motion.div>
           </div>
 
-
-          {/* =========================================================
-              MOBILE LAYOUT (Visible on mobile, hidden on md+)
-          ========================================================= */}
+          {/* ── MOBILE ── */}
           <div className="block md:hidden w-full h-full relative">
-            
-            {/* Mobile Navbar */}
             <div className="absolute top-0 left-0 w-full flex justify-between items-center py-6 z-50">
               <div className="flex items-center gap-3">
-                <img 
-                  src="/assests/avatar.png" 
-                  alt="Aditya Sharma" 
-                  className="w-10 h-10 rounded-full object-cover border border-muted/50 shadow-lg"
-                />
-                <span className="font-mono text-xs uppercase tracking-widest text-gray-300">Addy</span>
+                <img src="/assests/avatar.png" alt="Aditya Sharma" className="w-9 h-9 rounded-full object-cover" style={{ border: "1px solid #C9A84C33" }} />
+                <span className="font-mono text-xs uppercase tracking-widest" style={{ color: "#5A5550" }}>Addy</span>
               </div>
-              
-              {/* Hamburger Menu Button */}
-              <button 
-                onClick={() => setIsMenuOpen(true)}
-                className="flex flex-col gap-1.5 p-2 hover:opacity-70 transition-opacity"
-                aria-label="Open menu"
-              >
-                <div className="w-6 h-px bg-gray-300"></div>
-                <div className="w-6 h-px bg-gray-300"></div>
+              <button onClick={() => setIsMenuOpen(true)} className="flex flex-col gap-1.5 p-2 hover:opacity-70">
+                <div className="w-5 h-px" style={{ background: "#C9A84C88" }} />
+                <div className="w-5 h-px" style={{ background: "#C9A84C88" }} />
               </button>
             </div>
 
-            {/* Background Text */}
             <motion.div
               style={{ opacity: textOpacity, y: textY }}
               className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col z-0 pointer-events-none w-full text-center"
             >
-              <div className="font-display text-[22vw] font-black uppercase leading-[0.85] tracking-tighter text-foreground">
-                HI, I&apos;M
+              <div className="font-display text-[22vw] leading-[0.88] tracking-wider uppercase text-foreground">HI,</div>
+              <div
+                className="font-display text-[22vw] leading-[0.88] tracking-wider uppercase"
+                style={{ WebkitTextStroke: "1px rgba(201,168,76,0.4)", color: "transparent" }}
+              >
+                I&apos;M
               </div>
-              <div className="font-display text-[22vw] font-black uppercase leading-[0.85] tracking-tighter text-gray-300">
-                ADDY.
-              </div>
+              <div className="font-display text-[22vw] leading-[0.88] tracking-wider uppercase text-gold-shimmer">ADDY.</div>
             </motion.div>
 
-            {/* About Me Bio */}
             <motion.div
-              style={{ opacity: aboutOpacity, y: mobileAboutY }}
-              className="absolute left-1/2 -translate-x-1/2 top-[35%] w-[85vw] z-10 flex flex-col gap-5 backdrop-blur-md p-6 border-l-4 border-foreground rounded-r-lg bg-background/80"
+              style={{ opacity: aboutOpacity, y: aboutY }}
+              className="absolute left-1/2 -translate-x-1/2 top-[32%] w-[88vw] z-10 flex flex-col gap-4 p-6"
+              style2={{}}
             >
-              <h2 className="text-3xl font-display font-black uppercase tracking-tight">About Me</h2>
-              <p className="text-gray-400 text-sm leading-relaxed font-sans">
-                I’m <strong className="text-gray-200">Aditya Sharma</strong>, an AI-focused developer and Computer Science Engineer building intelligent systems that transform raw data into actionable intelligence.
-                <br /><br />
-                From AI flashcard platforms to code snippet managers, I build production-grade tools people actually use.
+              <svg className="absolute -top-px -left-px w-6 h-6" viewBox="0 0 32 32" fill="none">
+                <path d="M1 31 L1 1 L31 1" stroke="#C9A84C" strokeWidth="1" opacity="0.5"/>
+              </svg>
+              <div style={{ borderLeft: "2px solid #C9A84C66", paddingLeft: "0.75rem" }}>
+                <h2 className="font-display text-3xl uppercase tracking-wider" style={{ color: "#C9A84C" }}>About Me</h2>
+              </div>
+              <p className="font-sans text-sm leading-relaxed" style={{ color: "#9A9590", background: "#08080899", backdropFilter: "blur(8px)" }}>
+                Full-stack developer & AI engineer from Delhi. I build production tools and fill sketchbooks in equal measure.
               </p>
-
-              {/* Resume Button for Mobile */}
-              <a 
-                href="/Aditya%20Sharma%20Resume.pdf" 
-                target="_blank" 
+              <a
+                href="/Aditya%20Sharma%20Resume.pdf"
+                target="_blank"
                 rel="noopener noreferrer"
-                className="mt-2 w-full justify-center px-4 py-3 border border-gray-500 text-gray-300 font-mono text-xs uppercase tracking-widest hover:bg-foreground hover:text-background transition-colors flex items-center gap-3"
+                className="w-full text-center py-3 font-mono text-xs uppercase tracking-widest"
+                style={{ border: "1px solid #C9A84C44", color: "#C9A84C" }}
               >
-                View Resume
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg>
+                View Resume ↗
               </a>
-
             </motion.div>
           </div>
 
