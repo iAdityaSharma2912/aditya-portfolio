@@ -6,91 +6,131 @@ import { useRef } from "react";
 // --- PROJECT DATA ---
 const projects = [
   {
-    title: "KIRO",
-    tag: "AI Assistant",
-    description: "Built an AI assistant chatbot system, developing the backend using Python with RESTful API integrations.",
-    github: "https://github.com/iAdityaSharma2912/KIRO",
-    live: null,
-    // Abstract Neural Network / Brain vibe
-    bgImage: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?q=80&w=2560&auto=format&fit=crop",
+    title: "FlashSnap",
+    tag: "AI Learning Platform",
+    description: "AI-powered flashcard platform with PDF ingestion, SM-2 spaced repetition, streak tracking, and Google OAuth. Processes 50-page PDFs in under 12 seconds.",
+    github: "https://github.com/iAdityaSharma2912/flashsnap",
+    live: "https://www.flashsnap.in/",
+    bgImage: "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?q=80&w=2573&auto=format&fit=crop",
   },
   {
-    title: "KRAZY NOTESY",
-    tag: "Social Media Automater",
-    description: "Python automation script to upload media to Instagram, integrating AI-generated captions and hashtags.",
-    github: "https://github.com/iAdityaSharma2912/krazy-notesy",
-    live: "https://krazynotesy.vercel.app",
-    // Dynamic, connected network vibe
-    bgImage: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=2574&auto=format&fit=crop",
+    title: "DevVault",
+    tag: "Code Snippet Manager",
+    description: "Full-stack developer tool for organising and searching code snippets with CodeMirror 6 editor, tagging, full-text search, and REST API. Deployed with Docker Compose.",
+    github: "https://github.com/iAdityaSharma2912/devvault",
+    live: "https://taskky-the-manager.vercel.app/",
+    bgImage: "https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=2670&auto=format&fit=crop",
   },
   {
     title: "SheetSnap",
     tag: "Data Analysis",
-    description: "AI-powered Excel analyzer that dissects spreadsheets, extracts insights, and automates data understanding.",
+    description: "AI-powered Excel/CSV analytics engine with GPT-4o insight extraction. Cuts analyst data-to-insight time from 2–4 hrs to under 60 seconds on 10,000+ row datasets.",
     github: "https://github.com/iAdityaSharma2912/sheetsnap",
-    live: "https://sheetsnap-ai.vercel.app/",
-    // Structured geometric data vibe
+    live: "https://serene-rust.vercel.app/",
     bgImage: "https://images.unsplash.com/photo-1639322537228-f710d846310a?q=80&w=2664&auto=format&fit=crop",
+  },
+  {
+    title: "Company Enricher",
+    tag: "AI Intelligence Tool",
+    description: "AI-powered company intelligence frontend that enriches raw company names into structured profiles — industry, funding, size, tech stack, and key contacts.",
+    github: null,
+    live: "https://company-enricher-chi.vercel.app/",
+    bgImage: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2670&auto=format&fit=crop",
+  },
+  {
+    title: "Lemy",
+    tag: "Web Application",
+    description: "A production-grade web application showcasing full-stack engineering fundamentals — clean architecture, responsive design, and real-world deployment on Vercel.",
+    github: "https://github.com/iAdityaSharma2912/lemy",
+    live: "https://lemy.vercel.app/",
+    bgImage: "https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=2670&auto=format&fit=crop",
+  },
+  {
+    title: "Krazy Notesy",
+    tag: "Social Media Automation",
+    description: "Python automation platform for scheduling Instagram posts with AI-generated captions and hashtags. A/B tested GPT-generated vs manual content — 3× higher predicted engagement.",
+    github: "https://github.com/iAdityaSharma2912/krazy-notesy",
+    live: null,
+    bgImage: "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=2574&auto=format&fit=crop",
+  },
+  {
+    title: "KIRO",
+    tag: "AI Assistant",
+    description: "AI assistant chatbot system with a Python backend, RESTful API integrations, and a conversational interface designed for natural language task handling.",
+    github: "https://github.com/iAdityaSharma2912/KIRO",
+    live: null,
+    bgImage: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?q=80&w=2560&auto=format&fit=crop",
   },
 ];
 
+// Track width: 7 cards, each 80vw on md+, 100vw on mobile
+// translateX goes from 0 to -(n-1)/n * 100% of total track
+const CARD_COUNT = projects.length;
+const TRANSLATE_END = `-${((CARD_COUNT - 1) / CARD_COUNT) * 100}%`;
+
 export default function Projects() {
   const targetRef = useRef(null);
-  
-  // Track scroll progress within this specific section
+
   const { scrollYProgress } = useScroll({
     target: targetRef,
   });
 
-  // Transform vertical scroll (0 to 1) into horizontal movement (0% to -66.66%)
-  const x = useTransform(scrollYProgress, [0, 1], ["0%", "-66.66%"]);
+  // Widen the scroll range proportionally for more cards
+  const x = useTransform(scrollYProgress, [0, 1], ["0%", TRANSLATE_END]);
 
   return (
-    <section id="projects" ref={targetRef} className="relative h-[300vh] bg-transparent">
-      {/* The sticky container that holds the horizontal track */}
+    <section id="projects" ref={targetRef} className="relative bg-transparent" style={{ height: `${CARD_COUNT * 100}vh` }}>
+      {/* Sticky container */}
       <div className="sticky top-0 h-screen flex items-center overflow-hidden">
-        
+
         {/* Section Header */}
         <div className="absolute top-12 left-6 md:left-12 z-10 text-foreground font-black uppercase tracking-tighter text-4xl md:text-6xl">
           Featured Work
         </div>
-{/* The moving track */}
-        <motion.div style={{ x }} className="flex gap-8 px-6 md:px-12 w-[300vw]">
+
+        {/* Counter */}
+        <motion.div
+          className="absolute bottom-8 right-8 md:right-12 z-10 font-mono text-xs uppercase tracking-widest text-gray-500"
+        >
+          {CARD_COUNT} Projects
+        </motion.div>
+
+        {/* The moving track */}
+        <motion.div
+          style={{ x }}
+          className="flex gap-8 px-6 md:px-12"
+          style={{ x, width: `${CARD_COUNT * 100}vw` }}
+        >
           {projects.map((project, index) => (
-            <div 
-              key={index} 
+            <div
+              key={index}
               className="w-screen md:w-[80vw] lg:w-[60vw] h-[60vh] shrink-0 flex flex-col justify-end border border-muted p-8 md:p-12 group relative overflow-hidden"
-              // REMOVED: The inline style block is gone!
             >
-              
-              {/* =========================================
-                  THE BACKGROUND IMAGE (Replaces inline style)
-              ========================================= */}
+              {/* Background Image */}
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img 
-                src={project.bgImage} 
+              <img
+                src={project.bgImage}
                 alt={`${project.title} background`}
                 className="absolute inset-0 w-full h-full object-cover z-0"
               />
 
-              {/* =========================================
-                  THE DARK OVERLAY
-              ========================================= */}
-              {/* Bumped to z-10 so it sits on top of the image */}
+              {/* Dark Overlay */}
               <div className="absolute inset-0 bg-background/85 group-hover:bg-background/60 transition-all duration-500 z-10"></div>
 
+              {/* Index Badge */}
+              <div className="absolute top-8 left-8 md:top-12 md:left-12 z-20">
+                <span className="font-mono text-xs text-gray-600 tracking-widest">
+                  {String(index + 1).padStart(2, "0")} / {String(CARD_COUNT).padStart(2, "0")}
+                </span>
+              </div>
 
-              {/* =========================================
-                  THE LINKS (Top Right Corner)
-              ========================================= */}
-              {/* Bumped to z-20 so it sits on top of the overlay */}
+              {/* Links */}
               <div className="absolute top-8 right-8 md:top-12 md:right-12 flex gap-4 z-20">
-                {/* GitHub Icon */}
                 {project.github && (
-                  <a 
-                    href={project.github} 
-                    target="_blank" 
-                    rel="noopener noreferrer" 
+                  <a
+                    href={project.github}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="text-gray-500 hover:text-foreground transition-colors duration-300"
                     aria-label="GitHub Repository"
                   >
@@ -100,13 +140,11 @@ export default function Projects() {
                     </svg>
                   </a>
                 )}
-                
-                {/* Live Site Icon */}
                 {project.live && (
-                  <a 
-                    href={project.live} 
-                    target="_blank" 
-                    rel="noopener noreferrer" 
+                  <a
+                    href={project.live}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="text-gray-500 hover:text-foreground transition-colors duration-300"
                     aria-label="Live Website"
                   >
@@ -119,10 +157,7 @@ export default function Projects() {
                 )}
               </div>
 
-              {/* =========================================
-                  PROJECT CARD CONTENT
-              ========================================= */}
-              {/* Bumped to z-20 so it sits on top of the overlay */}
+              {/* Card Content */}
               <div className="flex flex-col gap-4 max-w-2xl z-20 relative">
                 <span className="font-mono text-sm tracking-widest uppercase text-gray-400">
                   {project.tag}
@@ -137,7 +172,8 @@ export default function Projects() {
 
             </div>
           ))}
-        </motion.div>      </div>
+        </motion.div>
+      </div>
     </section>
   );
 }

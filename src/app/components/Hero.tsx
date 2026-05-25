@@ -78,6 +78,7 @@ export default function Hero() {
               <button onClick={() => scrollTo('home')} className="hover:text-gray-400 transition-colors">Home</button>
               <button onClick={() => scrollTo('projects')} className="hover:text-gray-400 transition-colors">Projects</button>
               <button onClick={() => scrollTo('experience')} className="hover:text-gray-400 transition-colors">Experience</button>
+              <button onClick={() => scrollTo('art')} className="hover:text-gray-400 transition-colors">Art</button>
               <button onClick={() => scrollTo('writing')} className="hover:text-gray-400 transition-colors">Beyond</button>
               <button onClick={() => scrollTo('contact')} className="hover:text-gray-400 transition-colors">Contact</button>
               
@@ -118,6 +119,7 @@ export default function Hero() {
                 <button onClick={() => scrollTo('home')} className="hover:text-white transition-colors duration-300">Home</button>
                 <button onClick={() => scrollTo('projects')} className="hover:text-white transition-colors duration-300">Projects</button>
                 <button onClick={() => scrollTo('experience')} className="hover:text-white transition-colors duration-300">Experience</button>
+                <button onClick={() => scrollTo('art')} className="hover:text-white transition-colors duration-300">Art</button>
                 <button onClick={() => scrollTo('writing')} className="hover:text-white transition-colors duration-300">Beyond</button>
                 <button onClick={() => scrollTo('contact')} className="hover:text-white transition-colors duration-300">Contact</button>
               </div>
@@ -165,7 +167,7 @@ export default function Hero() {
               <p className="text-gray-400 text-xl leading-relaxed font-sans">
                 I’m <strong className="text-gray-200">Aditya Sharma</strong>, an AI-focused developer and Computer Science Engineer building intelligent systems that transform raw data into actionable intelligence.
                 <br /><br />
-                From AI chat systems like KIRO to automation engines like Krazy Notesy and data intelligence platforms like SheetSnap, I focus on scalable and deployable digital products.
+                From FlashSnap (a live AI study platform) to SheetSnap and DevVault, I ship full-stack products end-to-end — from backend pipelines and databases to deployed frontends with real users.
               </p>
               
               {/* Resume Button for Desktop */}
@@ -232,7 +234,7 @@ export default function Hero() {
               <p className="text-gray-400 text-sm leading-relaxed font-sans">
                 I’m <strong className="text-gray-200">Aditya Sharma</strong>, an AI-focused developer and Computer Science Engineer building intelligent systems that transform raw data into actionable intelligence.
                 <br /><br />
-                From AI chat systems to automation engines and data platforms, I focus on scalable digital products.
+                From AI flashcard platforms to code snippet managers, I build production-grade tools people actually use.
               </p>
 
               {/* Resume Button for Mobile */}
