@@ -51,7 +51,7 @@ export default function Hero() {
   };
   const lineVariants = {
     hidden:  { y: "110%", opacity: 0 },
-    visible: { y: "0%",   opacity: 1, transition: { duration: 0.9, ease: [0.22, 1, 0.36, 1] } },
+    visible: { y: "0%",   opacity: 1, transition: { duration: 0.9, ease: [0.22, 1, 0.36, 1] as [number, number, number, number], } },
   };
 
   return (
